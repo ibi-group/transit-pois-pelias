@@ -1,0 +1,5 @@
+# Don't commit log files
+logs/
+
+# This file is encrypted
+consts.json

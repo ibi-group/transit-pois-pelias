@@ -1,0 +1,14 @@
+[Unit]
+Description=Pelias
+After=docker.service
+BindsTo=docker.service
+ReloadPropagatedFrom=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /home/ubuntu/transit-pois-pelias/server-install/pelias-start.sh
+ExecReload=/bin/bash /home/ubuntu/transit-pois-pelias/server-install/pelias-start.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
