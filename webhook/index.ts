@@ -6,9 +6,9 @@ import execa from 'execa'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginExpress from '@bugsnag/plugin-express'
 
-import { WebhookConfig } from './utils'
+import { WebhookConfig, exists } from './utils'
 
-const { exists, mkdir, readdir, readFile, writeJSON } = require('fs-promise')
+const { mkdir, readdir, readFile, writeJSON } = require('fs-promise')
 
 const {
   BUGSNAG_APP_TYPE,
@@ -32,6 +32,7 @@ Bugsnag.start({
 if (parseInt(process.versions.node) < 16) {
   throw Error('Node version must be 16 or greater')
 }
+
 const app: express.Application = express()
 const bugsnagMiddleware = Bugsnag.getPlugin('express')
 

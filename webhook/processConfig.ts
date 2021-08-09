@@ -34,7 +34,7 @@ Bugsnag.start({
   releaseStage: BUGSNAG_RELEASE_STAGE
 })
 
-const status = {
+const status: Status = {
   completed: false,
   error: false,
   message: 'Initializing...',
@@ -71,7 +71,13 @@ const status = {
   await updateStatus(status)
 
   // Import current Pelias config for later ammendment
-  const peliasConfig = require(PELIAS_CONFIG_LOCATION)
+  // This is not the entire Pelias config, but includes all we use here
+  const peliasConfig: {
+    imports: {
+      csv: { download: string[] }
+      transit: { feeds: PeliasFeed[] }
+    }
+  } = require(PELIAS_CONFIG_LOCATION)
 
   await updateStatus({
     message: 'Downloading GTFS feeds',
@@ -104,7 +110,7 @@ const status = {
   })
   // We want to replace all csv files associated with the deployment
   // to remove outdated POIs
-  const existingCsvNotInCurrentProject =
+  const existingCsvNotInCurrentProject: string[] =
     peliasConfig.imports.csv.download.filter((csvUrl: string) => {
       let deploymentIdFromCsvName = ''
       // CSV urls not guaranteed to conform to the way theya are generated in
@@ -185,7 +191,7 @@ const status = {
     })
 
   subprocess.all.on('data', (data: ExecaSyncReturnValue) => {
-    const lastMessage = data.toString().trim()
+    const lastMessage: string = data.toString().trim()
     if (lastMessage !== '') {
       lastMessage.split('\n').forEach((line) => {
         last50Logs.push(line)
