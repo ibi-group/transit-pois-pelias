@@ -5,7 +5,9 @@
   "author": "IBI Group",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "tsdx lint *.js",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "@bugsnag/js": "^7.11.0",
@@ -15,5 +17,18 @@
     "express": "^4.17.1",
     "fs-promise": "^2.0.3",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@semantic-release/git": "^9.0.0",
+    "semantic-release": "^17.4.4",
+    "tsdx": "https://github.com/ibi-group/tsdx"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ]
   }
 }

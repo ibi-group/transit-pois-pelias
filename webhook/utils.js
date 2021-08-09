@@ -106,7 +106,7 @@ module.exports.writeStatus = writeStatus
  * @param {} seconds The number of seconds to block
  */
 const wait = async function (seconds) {
-  return new Promise((resolve, reject) => setTimeout(resolve, seconds * 1000))
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
 }
 module.exports.wait = wait
 
