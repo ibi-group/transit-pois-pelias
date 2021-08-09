@@ -12,7 +12,7 @@ First, create `consts.json` based on the provided example file.
 
 _This server requires Node.js 16+_
 
-`yarn start` will start a server on port `3000`. When deployed, it should be secured in some way as it runs expensive commands and will downlad and attempt to unzip any zip file listed in the manifest.json.
+`yarn start` will start a server on port `3000`. The server is desinged to be run out of a `dist/` directory. `yarn start` will automatically transpile the typescript and start the server from the correct directory.
 
 ### Datatools-UI considerations
 

@@ -1,29 +1,30 @@
-const { setTimeout } = require('timers/promises')
+/* eslint-disable complexity */
+import { setTimeout as setPromisedTimeout } from 'timers/promises'
 
-const {
-  createFile: touch,
-  exists,
-  readJSON,
-  remove,
-  writeJSON
-} = require('fs-promise')
-const execa = require('execa')
-const CircularBuffer = require('circular-buffer')
-const Bugsnag = require('@bugsnag/js')
+import { createFile as touch, readJSON, remove, writeJSON } from 'fs-promise'
+import execa, { ExecaChildProcess, ExecaSyncReturnValue } from 'execa'
+import CircularBuffer from 'circular-buffer'
+import Bugsnag from '@bugsnag/js'
 
-const {
+import {
   downloadAndProcessGtfsFeed,
+  exists,
   uploadAndDeleteLog,
   wait,
-  writeStatus
-} = require('./utils')
+  writeStatus,
+  WebhookConfig,
+  Status,
+  PeliasFeed
+} from './utils'
+
 const {
   BUGSNAG_APP_TYPE,
   BUGSNAG_RELEASE_STAGE,
   PELIAS_CONFIG_DIR,
   PELIAS_UPDATE_LOCK_FILE,
   WORKER_BUGSNAG_NOTIFIER_KEY
-} = require('./consts.json')
+} = require('../consts.json')
+
 const PELIAS_CONFIG_LOCATION = `${PELIAS_CONFIG_DIR}/pelias.json`
 
 Bugsnag.start({
@@ -46,15 +47,15 @@ const status = {
     return
   }
 
-  const configFilePath = process.argv.slice(2, 3)[0]
-  const config = await readJSON(configFilePath)
+  const configFilePath: string = process.argv.slice(2, 3)[0]
+  const config: WebhookConfig = await readJSON(configFilePath)
 
   // Create helper function that includes the workerID to write to the correct status file
-  const updateStatus = async (newStatus) =>
+  const updateStatus = async (newStatus: Status): Promise<void> =>
     await writeStatus(newStatus, config.workerId)
 
   // Create helper function that fails helpfully
-  const fail = async (message) => {
+  const fail = async (message: string): Promise<void> => {
     await updateStatus({
       completed: true,
       error: message
@@ -78,16 +79,21 @@ const status = {
   })
 
   // Download and process each GTFS feed
-  const newPeliasFeeds = await Promise.all(
+  const newPeliasFeeds: void | PeliasFeed[] = await Promise.all(
     config.gtfsFeeds.map(downloadAndProcessGtfsFeed)
   ).catch(async (err) => {
     await fail('Something went wrong while processing GTFS files:\n' + err)
   })
+
+  if (typeof newPeliasFeeds === 'undefined') {
+    await fail('No new Pelias feeds were provided for import')
+  }
   // Merge into existing pelias config
   peliasConfig.imports.transit.feeds = [
     // Include all existing feeds that don't have the ID of the new feed
     ...peliasConfig.imports.transit.feeds.filter(
-      (feed) => !newPeliasFeeds.map((f) => f.agencyId).includes(feed.agencyId)
+      (feed: PeliasFeed) =>
+        !newPeliasFeeds.map((f) => f.agencyId).includes(feed.agencyId)
     ),
     ...newPeliasFeeds
   ]
@@ -99,7 +105,7 @@ const status = {
   // We want to replace all csv files associated with the deployment
   // to remove outdated POIs
   const existingCsvNotInCurrentProject =
-    peliasConfig.imports.csv.download.filter((csvUrl) => {
+    peliasConfig.imports.csv.download.filter((csvUrl: string) => {
       let deploymentIdFromCsvName = ''
       // CSV urls not guaranteed to conform to the way theya are generated in
       // https://github.com/ibi-group/datatools-server/blob/dev/src/main/java/com/conveyal/datatools/manager/controllers/api/DeploymentController.java
@@ -116,7 +122,7 @@ const status = {
 
   // Append CSV urls to pelias imports, merging
   // the existing and new csv URL lists
-  let poiCsvUrls = config.csvFiles || []
+  let poiCsvUrls: string[] = config.csvFiles || []
 
   // Encode URLs correctly
   poiCsvUrls = poiCsvUrls.map(encodeURI)
@@ -159,9 +165,9 @@ const status = {
     message: 'Updating Pelias',
     percentComplete: 60.0
   })
-  const last50Logs = new CircularBuffer(50)
+  const last50Logs: CircularBuffer = new CircularBuffer(50)
 
-  const subprocess = execa(
+  const subprocess: ExecaChildProcess = execa(
     'sh',
     ['-c', `pelias download csv && pelias import csv && pelias import transit`],
     { all: true, cwd: PELIAS_CONFIG_DIR }
@@ -170,15 +176,15 @@ const status = {
   subprocess.all.pipe(process.stdout)
 
   // Set a timeout to avoid hanging
-  const hangCheck = new AbortController()
-  const signal = hangCheck.signal
-  setTimeout(50000, null, { signal })
+  const hangCheck: AbortController = new AbortController()
+  const signal: AbortSignal = hangCheck.signal
+  setPromisedTimeout(50000, null, { signal })
     .then(async () => await fail('Pelias update is hanging'))
     .catch((err) => {
       if (err.name === 'AbortError') console.log('Pelias did not hang')
     })
 
-  subprocess.all.on('data', (data) => {
+  subprocess.all.on('data', (data: ExecaSyncReturnValue) => {
     const lastMessage = data.toString().trim()
     if (lastMessage !== '') {
       lastMessage.split('\n').forEach((line) => {

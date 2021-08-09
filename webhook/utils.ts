@@ -1,26 +1,51 @@
-const path = require('path')
+import { access, copyFile, mkdir } from 'fs/promises'
+import { constants } from 'fs'
+import path from 'path'
 
-const {
-  copyFile,
-  exists,
-  mkdir,
-  readJSON,
-  remove,
-  writeJSON
-} = require('fs-promise')
-const execa = require('execa')
-const { v4: uuidv4 } = require('uuid')
+import { readJSON, remove, writeJSON } from 'fs-promise'
+import execa from 'execa'
+import { v4 as uuidv4 } from 'uuid'
 
 const { TEMP_DIR } = require('./consts.json')
+
+// Types
+export type WebhookConfig = {
+  gtfsFeeds: Array<{ uri: string; name: string; filename: string }>
+  csvFiles: Array<string>
+  workerId: string
+  deploymentId: string
+  logUploadUrl: string
+}
+export type WebhookFeed = {
+  uri: string
+  name: string
+  filename: string
+}
+export type Status = {
+  completed?: boolean
+  error?: string | boolean
+  message?: string
+  percentComplete?: number
+}
+export type PeliasFeed = {
+  agencyId: string
+  agencyName: string
+  filename: string
+  layerId: string
+  layerName: string
+}
 
 // Helper methods
 /**
  * Helper function which copies stop.txt to pelias config dir and assembles new config object
- * @param {*} parsedFeedInfo GTFS feed.txt parsed into a Javascript object
+ * @param {*} feedDirectory  Directory containing GTFS feed
  * @param {*} feed           An object containing properties needed for processing
  * @returns                  A Pelias feed object for insertion in a Pelias config file
  */
-const importGtfsData = async (feed, feedDirectory) => {
+export const importGtfsData = async (
+  feed: WebhookFeed,
+  feedDirectory: string
+): Promise<PeliasFeed> => {
   // copy stop file to agency folder
   const feedSourceDir = path.join(
     __dirname,
@@ -48,7 +73,9 @@ const importGtfsData = async (feed, feedDirectory) => {
  * generates a Pelias config object pointing to those extracted files
  * @param {*} Object containing properties needed for proecessing
  */
-const downloadAndProcessGtfsFeed = async (feed) => {
+export const downloadAndProcessGtfsFeed = async (
+  feed: WebhookFeed
+): Promise<PeliasFeed> => {
   console.log(`Downloading ${feed.name} specified in manifest`)
 
   // Download each GTFS feed (replaces if exists)
@@ -61,6 +88,7 @@ const downloadAndProcessGtfsFeed = async (feed) => {
     }
   } catch (err) {
     console.warn(`Failed to download ${feed.uri}: \n ${err}`)
+    return null
   }
 
   // Create a random extraction directory to avoid collisions
@@ -76,7 +104,6 @@ const downloadAndProcessGtfsFeed = async (feed) => {
 
   return importGtfsData(feed, extractionDir)
 }
-module.exports.downloadAndProcessGtfsFeed = downloadAndProcessGtfsFeed
 
 /**
  * Write updated status values to status file and create status file if it doesn't
@@ -85,37 +112,45 @@ module.exports.downloadAndProcessGtfsFeed = downloadAndProcessGtfsFeed
  * @param {*} workerId      Assigned by webhook, determines the file to write to
  * be passed, they will automatically be added
  */
-const writeStatus = async (updatedStatus, workerId) => {
+export const writeStatus = async (
+  updatedStatus: Status,
+  workerId: string
+): Promise<void> => {
   const statusFile = `logs/status-${workerId}.json`
   // create status file if it doesn't exist
   if (!(await exists(statusFile))) {
     await writeJSON(statusFile, {})
   }
   // load current status
-  const currentStatus = await readJSON(statusFile, 'utf-8')
+  const currentStatus = await readJSON(statusFile)
   // merge statuses together
   const newStatus = { ...currentStatus, ...updatedStatus }
   // write updated status to status file
   console.log('TEMP:', newStatus)
-  await writeJSON(statusFile, newStatus, 'utf-8')
+  await writeJSON(statusFile, newStatus)
 }
-module.exports.writeStatus = writeStatus
 
 /**
  * Block for a specifed number of seconds
  * @param {} seconds The number of seconds to block
  */
-const wait = async function (seconds) {
+export const wait = async function (seconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
 }
-module.exports.wait = wait
 
 /**
- * Analagous to https://github.com/ibi-group/otp-runner/blob/0f5246325595d1232c265b871b36a6fe646f7b57/lib/index.js#L629
+ * Analagous to
+ * https://github.com/ibi-group/otp-runner/blob/0f5246325595d1232c265b871b36a6fe646f7b57/lib/index.js#L629
  * uploads a log file to s3 for future inspection
  * @param {*} config  Webhook config object, used to find workerId and upload URL
  */
-const uploadAndDeleteLog = async ({ logUploadUrl, workerId }) => {
+export const uploadAndDeleteLog = async ({
+  logUploadUrl,
+  workerId
+}: {
+  logUploadUrl: string
+  workerId: string
+}): Promise<void> => {
   if (logUploadUrl) {
     const logPath = `logs/pelias-update-log-${workerId}.txt`
     const statusPath = `logs/status-${workerId}.json`
@@ -133,4 +168,17 @@ const uploadAndDeleteLog = async ({ logUploadUrl, workerId }) => {
     await remove(statusPath)
   }
 }
-module.exports.uploadAndDeleteLog = uploadAndDeleteLog
+
+/**
+ * Checks if a file path exists
+ * @param path  Path to check
+ * @returns     true if the file exists, false if it doesn't
+ */
+export const exists = async (path: string): Promise<boolean> => {
+  try {
+    await access(path, constants.R_OK)
+    return true
+  } catch {
+    return false
+  }
+}
