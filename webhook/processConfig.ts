@@ -47,6 +47,7 @@ const status: Status = {
     return
   }
 
+  // Load configuration passed in from Express server
   const configFilePath: string = process.argv.slice(2, 3)[0]
   const config: WebhookConfig = await readJSON(configFilePath)
 
@@ -133,6 +134,7 @@ const status: Status = {
   // Encode URLs correctly
   poiCsvUrls = poiCsvUrls.map(encodeURI)
 
+  // Assemble all urls into new pelias config property
   peliasConfig.imports.csv.download = Array.from(
     new Set([...existingCsvNotInCurrentProject, ...poiCsvUrls])
   )

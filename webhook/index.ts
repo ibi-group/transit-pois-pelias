@@ -44,7 +44,7 @@ app.use(express.json())
 app.use(bugsnagMiddleware.errorHandler)
 
 /**
- * POST HTTP Endpoint. Requires specific objects in the request body, delivered by Datatools-server
+ * POST HTTP Endpoint. Requires specific objects in the request body, delivered by Datatools server
  * job designed to work with this endpoint.
  * Will fail otherwise
  *

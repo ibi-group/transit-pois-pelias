@@ -132,7 +132,7 @@ export const writeStatus = async (
 
 /**
  * Block for a specifed number of seconds
- * @param {} seconds The number of seconds to block
+ * @param {number} seconds The number of seconds to block
  */
 export const wait = async function (seconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
