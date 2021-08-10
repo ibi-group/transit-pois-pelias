@@ -10,16 +10,16 @@ const { TEMP_DIR } = require('./consts.json')
 
 // Types
 export type WebhookConfig = {
-  gtfsFeeds: Array<{ uri: string; name: string; filename: string }>
   csvFiles: Array<string>
-  workerId: string
   deploymentId: string
+  gtfsFeeds: Array<{ filename: string; name: string; uri: string }>
   logUploadUrl: string
+  workerId: string
 }
 export type WebhookFeed = {
-  uri: string
-  name: string
   filename: string
+  name: string
+  uri: string
 }
 export type Status = {
   completed?: boolean
