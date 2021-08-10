@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "start": "yarn build && node dist/index.js",
-    "build": "tsdx build -i index.ts --target node --format cjs",
+    "build:processConfig": "rm -r dist-processConfig && tsdx build -i processConfig.ts --target node --format cjs && mv dist dist-processConfig",
+    "build:index": "tsdx build -i index.ts --target node --format cjs",
+    "build": "yarn build:processConfig && yarn build:index",
     "lint": "tsdx lint *.ts",
     "semantic-release": "semantic-release"
   },

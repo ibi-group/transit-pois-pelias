@@ -25,12 +25,12 @@ const {
   WORKER_BUGSNAG_NOTIFIER_KEY
 } = require('../consts.json')
 
-const PELIAS_CONFIG_LOCATION = `${PELIAS_CONFIG_DIR}/pelias.json`
+const PELIAS_CONFIG_FILE = `../${PELIAS_CONFIG_DIR}/pelias.json`
 
 Bugsnag.start({
   apiKey: WORKER_BUGSNAG_NOTIFIER_KEY,
   appType: BUGSNAG_APP_TYPE,
-  appVersion: require('./package.json').version,
+  appVersion: require('../package.json').version,
   releaseStage: BUGSNAG_RELEASE_STAGE
 })
 
@@ -78,7 +78,7 @@ const status: Status = {
       csv: { download: string[] }
       transit: { feeds: PeliasFeed[] }
     }
-  } = require(PELIAS_CONFIG_LOCATION)
+  } = require(PELIAS_CONFIG_FILE)
 
   await updateStatus({
     message: 'Downloading GTFS feeds',
@@ -141,7 +141,7 @@ const status: Status = {
 
   // Write new pelias config based on generated blocks
   try {
-    await writeJSON(PELIAS_CONFIG_LOCATION, peliasConfig)
+    await writeJSON(PELIAS_CONFIG_FILE, peliasConfig)
   } catch (err) {
     await fail(
       'Something went wrong while updating the Pelias configuration file:\n' +

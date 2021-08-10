@@ -75,7 +75,7 @@ app.post('/webhook', async (req: express.Request, res: express.Response) => {
   await writeJSON(configFilePath, processConfig)
 
   // Spawn worker which updates pelias
-  execa('node', ['processConfig.js', configFilePath], {
+  execa('node', ['dist-processConfig/index.js', configFilePath], {
     all: true,
     detached: true
   }).all.pipe(createWriteStream(`logs/pelias-update-log-${workerId}.txt`))

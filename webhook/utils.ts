@@ -6,7 +6,7 @@ import { readJSON, remove, writeJSON } from 'fs-promise'
 import execa from 'execa'
 import { v4 as uuidv4 } from 'uuid'
 
-const { TEMP_DIR } = require('./consts.json')
+const { TEMP_DIR, PELIAS_CONFIG_DIR } = require('../consts.json')
 
 // Types
 export type WebhookConfig = {
@@ -48,8 +48,7 @@ export const importGtfsData = async (
 ): Promise<PeliasFeed> => {
   // copy stop file to agency folder
   const feedSourceDir = path.join(
-    __dirname,
-    `../pelias-config/data/transit/${feed.name}/`
+    `../${PELIAS_CONFIG_DIR}/data/transit/${feed.name}/`
   )
   await mkdir(feedSourceDir, { recursive: true })
   await copyFile(`${feedDirectory}stops.txt`, `${feedSourceDir}stops.txt`)
