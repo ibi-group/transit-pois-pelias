@@ -48,7 +48,7 @@ export const importGtfsData = async (
 ): Promise<PeliasFeed> => {
   // copy stop file to agency folder
   const feedSourceDir = path.join(
-    `../${PELIAS_CONFIG_DIR}/data/transit/${feed.name}/`
+    `${PELIAS_CONFIG_DIR}/data/transit/${feed.name}/`
   )
   await mkdir(feedSourceDir, { recursive: true })
   await copyFile(`${feedDirectory}stops.txt`, `${feedSourceDir}stops.txt`)

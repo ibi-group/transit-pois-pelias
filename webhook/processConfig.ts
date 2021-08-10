@@ -25,7 +25,7 @@ const {
   WORKER_BUGSNAG_NOTIFIER_KEY
 } = require('../consts.json')
 
-const PELIAS_CONFIG_FILE = `../${PELIAS_CONFIG_DIR}/pelias.json`
+const PELIAS_CONFIG_FILE = `${PELIAS_CONFIG_DIR}/pelias.json`
 
 Bugsnag.start({
   apiKey: WORKER_BUGSNAG_NOTIFIER_KEY,
@@ -78,7 +78,7 @@ const status: Status = {
       csv: { download: string[] }
       transit: { feeds: PeliasFeed[] }
     }
-  } = require(PELIAS_CONFIG_FILE)
+  } = require(`../${PELIAS_CONFIG_FILE}`)
 
   await updateStatus({
     message: 'Downloading GTFS feeds',
