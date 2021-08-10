@@ -6,7 +6,7 @@ import { readJSON, remove, writeJSON } from 'fs-promise'
 import execa from 'execa'
 import { v4 as uuidv4 } from 'uuid'
 
-const { TEMP_DIR, PELIAS_CONFIG_DIR } = require('../consts.json')
+const { PELIAS_CONFIG_DIR, TEMP_DIR } = require('../consts.json')
 
 // Types
 export type WebhookConfig = {
