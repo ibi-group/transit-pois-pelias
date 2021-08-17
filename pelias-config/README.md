@@ -12,11 +12,11 @@ A rudimentary example custom CSV file is included in the `data/csv` folder.
 
 Please refer to the instructions at https://github.com/pelias/docker in order to install and configure your docker environment.
 
-The minimum configuration required in order to run this project are [installing prerequisites](https://github.com/pelias/docker#prerequisites), [install the pelias command](https://github.com/pelias/docker#installing-the-pelias-helper-script) and [configure the environment](https://github.com/pelias/docker#configure-environment).
+The minimum configuration required in order to run this project are [installing prerequisites](https://github.com/pelias/docker#prerequisites), [install the pelias command](https://github.com/pelias/docker#installing-the-pelias-helper-script). An environment does not need to be configured, as it is provided by this repository.
 
-Be careful to not run the Pelias default project. The prepare and interpolation steps especially can take over an hour to run!
+Be careful to not run any Pelias example project. The prepare and interpolation steps especially can take over an hour to run!
 
-If Pelias is installed globally, then running the commands listed in the build step below will work.
+Once Pelias is installed globally, then running the commands listed in the build step below will work.
 
 Before running the build step, clone this repository into a seperate directory from the pelias install.
 
