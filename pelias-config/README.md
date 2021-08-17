@@ -16,15 +16,24 @@ The minimum configuration required in order to run this project are [installing 
 
 Be careful to not run the Pelias default project. The prepare and interpolation steps especially can take over an hour to run!
 
-If Pelias is installed globally, then running the commands listed in the build step below will work, provided all configuration files have been decrypted.
+If Pelias is installed globally, then running the commands listed in the build step below will work.
+
+Before running the build step, clone this repository into a seperate directory from the pelias install.
+
+```bash
+git clone https://github.com/ibi-group/transit-pois-pelias
+cd transit-pois-pelias/pelias-config
+```
 
 # Run a Build
 
 By default, the instance will only load the example csv file. Transit data can be loaded in using the webhook.
 
-`pelias elastic create` is not included in these steps because ElasticSearch data is included
+The `pelias.json` file provided here will ensure that the pelias instance built is as minimal as possible, only serving csv and transit results.
 
-To run a complete build, execute the following commands in this directory:
+`pelias elastic create` is not included in these steps because ElasticSearch data is included in this directory.
+
+To run a complete build, execute the following commands _in this directory_:
 
 ```bash
 pelias compose pull

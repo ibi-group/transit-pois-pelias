@@ -8,6 +8,7 @@ import BugsnagPluginExpress from '@bugsnag/plugin-express'
 
 import { WebhookConfig, exists } from './utils'
 
+// fs-promise only exports cjs
 const { mkdir, readdir, readFile, writeJSON } = require('fs-promise')
 
 const {
@@ -16,8 +17,6 @@ const {
   EXPRESS_BUGSNAG_NOTIFIER_KEY,
   TEMP_DIR
 } = require('../consts.json')
-
-// fs-promise only exports cjs
 
 // Bugsnag will automatically report errors from Express via a wrapper.
 Bugsnag.start({
@@ -45,7 +44,8 @@ app.use(bugsnagMiddleware.errorHandler)
 
 /**
  * POST HTTP Endpoint. Requires specific objects in the request body, delivered by Datatools server
- * job designed to work with this endpoint.
+ * in https://github.com/ibi-group/datatools-server/blob/dev/src/main/java/com/conveyal/datatools/manager/jobs/PeliasUpdateJob.java
+ *
  * Will fail otherwise
  *
  * @param {Object} req  Express request object. Must contain manifest.json in the body

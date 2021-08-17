@@ -41,6 +41,10 @@ const status: Status = {
   percentComplete: 0
 }
 
+/* All following code is async, but JS requires a wrapper to run async code at
+   the root of a file. The semicolon seperates the wrapped body from the previous
+   global constants.
+ */
 ;(async () => {
   if (process.argv.length < 3) {
     console.error('No configuration file path specified!')
