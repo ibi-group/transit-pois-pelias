@@ -56,10 +56,4 @@ It may take up to a minute for ElasticSearch to finish updating, so for the firs
 
 # Server Install
 
-To deploy this instance on a server (along with the associated webhook), an install script is provided in the `server-install` directory.
-
-This script was tested with Ubuntu 20.04 on an Amazon EC2 r5a.large. However, it should work with any Ubuntu/Debian-based server with minimal changes.
-
-The script assumes this repository has been copied to the home directory of the default ubuntu user (as a folder `transit-pois-pelias`). Running the `pelias-start.sh` script will then install all needed dependencies, set them up and launch the Pelias instance and a webhook for adding content to the instance.
-
-The server will run on port 80 (via nginx).
+To deploy this instance on a server (along with the associated webhook), an install script is provided in the `server-install` directory. More information is provided in the README in that directory.
