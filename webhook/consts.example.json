@@ -1,0 +1,7 @@
+{
+	"EXPRESS_BUGSNAG_NOTIFIER_KEY": "<Put a Bugsnag notifier key here>",
+	"WORKER_BUGSNAG_NOTIFIER_KEY": "<Put a Bugsnag notifier key here>",
+	"PELIAS_CONFIG_DIR": "../pelias-config",
+	"PELIAS_UPDATE_LOCK_FILE": "./pelias.lock",
+	"TEMP_DIR": "/tmp/transit/"
+}

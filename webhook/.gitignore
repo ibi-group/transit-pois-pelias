@@ -1,0 +1,9 @@
+# Don't commit log files
+logs/
+
+# Don't commit built files
+dist/
+dist-processConfig/
+
+# This file contains secrets
+consts.json

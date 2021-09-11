@@ -1,0 +1,13 @@
+[Unit]
+Description=Pelias Updater Webhook
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/transit-pois-pelias/webhook/
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
