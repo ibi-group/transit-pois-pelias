@@ -1,4 +1,0 @@
-id,source,layer,name,housenumber,street,postcode,lat,lon,addendum_json_pelias
-example,pelias,example_layer,Example Location,,,,5,5
-custom2,pelias,example_layer,supercustom,1,Main St,90210,47.1,-122.1
-readme_example,pelias,example_layer,mariner,334,hudson street,10001,9.9,9.9
