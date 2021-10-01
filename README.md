@@ -7,3 +7,7 @@ The `server-install` directory includes scripts and configuration files to launc
 The `pelias-config` directory contains configuration files for the Pelias instance `server-install` installs. It also includes [instructions for running this server locally](https://github.com/ibi-group/transit-pois-pelias/tree/master/pelias-config).
 
 The `webhook` directory contains an express server which allows for using Datatools to update Pelias, importing all new stops and POIs. More information about the server and how to run it [is available in the `webhook` directory](https://github.com/ibi-group/transit-pois-pelias/tree/master/webhook).
+
+### Known Issues
+- The webhook can only replace GTFS feeds, not delete them. If the webhook receives a deployment with a feed currently in Pelias missing, it will ignore the existing feed and add the new one. This can be troublesome when renaming a feed, as duplication can occur. In this case for now, the feed has to be manually removed from the `pelias.json` in the `pelias-config` folder and `pelias import transit` manually run.
+- Stop IDs sometimes conflict with OTP stop IDs. This is under investigation.
