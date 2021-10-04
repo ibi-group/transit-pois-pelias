@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/transit-pois-pelias/webhook/
-ExecStart=/usr/bin/node index.js
+ExecStart=/usr/bin/node dist/index.js
 Restart=on-failure
 
 [Install]
