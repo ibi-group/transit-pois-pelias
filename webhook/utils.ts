@@ -14,6 +14,7 @@ export type WebhookConfig = {
   deploymentId: string
   gtfsFeeds: Array<{ filename: string; name: string; uri: string }>
   logUploadUrl: string
+  resetDb: boolean
   workerId: string
 }
 export type WebhookFeed = {
