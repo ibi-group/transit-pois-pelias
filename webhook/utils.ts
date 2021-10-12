@@ -125,7 +125,7 @@ export const writeStatus = async (
   // merge statuses together
   const newStatus = { ...currentStatus, ...updatedStatus }
   // write updated status to status file
-  console.log('TEMP:', newStatus)
+  console.log('Writing Status:', newStatus)
   await writeJSON(statusFile, newStatus)
 }
 
