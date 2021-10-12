@@ -154,7 +154,12 @@ export const uploadAndDeleteLog = async ({
     const logPath = `logs/pelias-update-log-${workerId}.txt`
     const statusPath = `logs/status-${workerId}.json`
     try {
-      await execa('aws', ['s3', 'cp', logPath, logUploadUrl])
+      await execa('aws', [
+        's3',
+        'cp',
+        logPath,
+        `${logUploadUrl}/pelias-update-log-${workerId}.txt`
+      ])
     } catch {
       console.warn('Failed to upload log, not deleting it.')
       return
