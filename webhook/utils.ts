@@ -125,7 +125,7 @@ export const writeStatus = async (
   // merge statuses together
   const newStatus = { ...currentStatus, ...updatedStatus }
   // write updated status to status file
-  console.log('TEMP:', newStatus)
+  console.log('Writing Status:', newStatus)
   await writeJSON(statusFile, newStatus)
 }
 
@@ -154,7 +154,12 @@ export const uploadAndDeleteLog = async ({
     const logPath = `logs/pelias-update-log-${workerId}.txt`
     const statusPath = `logs/status-${workerId}.json`
     try {
-      await execa('aws', ['s3', 'cp', logPath, logUploadUrl])
+      await execa('aws', [
+        's3',
+        'cp',
+        logPath,
+        `${logUploadUrl}/pelias-update-log-${workerId}.txt`
+      ])
     } catch {
       console.warn('Failed to upload log, not deleting it.')
       return
