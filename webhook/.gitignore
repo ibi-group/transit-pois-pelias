@@ -2,8 +2,10 @@
 logs/
 
 # Don't commit built files
-dist/
-dist-processConfig/
+dist/*
+!dist/.gitkeep
+dist-processConfig/*
+!dist-processConfig/.gitkeep
 
 # This file contains secrets
 consts.json
