@@ -22,7 +22,7 @@ sudo apt install nginx -y
 
 # Install webhook dependencies
 cd ~/transit-pois-pelias/webhook/
-yarn install
+yarn install --no-cache --cache-folder /tmp/
 yarn build
 
 # Be in script directory for copying
