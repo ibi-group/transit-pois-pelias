@@ -113,23 +113,6 @@ const status: Status = {
     message: 'Importing CSV',
     percentComplete: 40.0
   })
-  // We want to replace all csv files associated with the deployment
-  // to remove outdated POIs
-  const existingCsvNotInCurrentProject: string[] =
-    peliasConfig.imports.csv.download.filter((csvUrl: string) => {
-      let deploymentIdFromCsvName = ''
-      // CSV urls not guaranteed to conform to the way theya are generated in
-      // https://github.com/ibi-group/datatools-server/blob/dev/src/main/java/com/conveyal/datatools/manager/controllers/api/DeploymentController.java
-
-      // Only process if length is correct
-      if (csvUrl.split('/').length === 8) {
-        deploymentIdFromCsvName = csvUrl.split('/')[6]
-      }
-      // Only keep CSV files which don't originate from this project
-      // We don't garuntee deploymentId is supplied, but if it is not, this will always
-      // be true
-      return config.deploymentId !== deploymentIdFromCsvName
-    })
 
   // Append CSV urls to pelias imports, merging
   // the existing and new csv URL lists
@@ -139,9 +122,7 @@ const status: Status = {
   poiCsvUrls = poiCsvUrls.map(encodeURI)
 
   // Assemble all urls into new pelias config property
-  peliasConfig.imports.csv.download = Array.from(
-    new Set([...existingCsvNotInCurrentProject, ...poiCsvUrls])
-  )
+  peliasConfig.imports.csv.download = poiCsvUrls
 
   // Write new pelias config based on generated blocks
   try {
