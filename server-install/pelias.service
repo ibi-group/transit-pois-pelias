@@ -1,8 +1,6 @@
 [Unit]
 Description=Pelias
-After=docker.service
-BindsTo=docker.service
-ReloadPropagatedFrom=docker.service
+After=pelias-webhook.service
 
 [Service]
 Type=oneshot
