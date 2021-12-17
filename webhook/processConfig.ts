@@ -180,16 +180,20 @@ const status: Status = {
   const last50Logs: CircularBuffer = new CircularBuffer(50)
 
   // Create an extra set of commands to drop the db should the config specify to
-  let resetCommands = ''
+  let resetCommandsPre = ''
+  let resetCommandsPost = 'echo "Import Complete"'
+
   if (config.resetDb) {
-    resetCommands = 'pelias elastic drop -f && pelias elastic create &&'
+    resetCommandsPre = 'pelias elastic drop -f && pelias elastic create &&'
+    resetCommandsPost =
+      'pelias compose down && ~/transit-pois-pelias/server-install/pelias-start.sh'
   }
 
   const subprocess: ExecaChildProcess = execa(
     'sh',
     [
       '-c',
-      `${resetCommands} pelias download csv && pelias import csv && pelias import transit`
+      `${resetCommandsPre} pelias download csv && pelias import csv && pelias import transit && ${resetCommandsPost}`
     ],
     { all: true, cwd: PELIAS_CONFIG_DIR }
   )
