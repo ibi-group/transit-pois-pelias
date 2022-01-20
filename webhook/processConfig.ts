@@ -184,7 +184,7 @@ const status: Status = {
   // Set a timeout to avoid hanging
   const hangCheck: AbortController = new AbortController()
   const signal: AbortSignal = hangCheck.signal
-  setPromisedTimeout(160000, null, { signal })
+  setPromisedTimeout(300000, null, { signal })
     .then(async () => await fail('Pelias update is hanging'))
     .catch((err) => {
       if (err.name === 'AbortError') console.log('Pelias did not hang')
