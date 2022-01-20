@@ -222,7 +222,7 @@ const status: Status = {
   // either report success or failure based on exit code
   if (subprocess.exitCode > 0) {
     await fail(
-      `Pelias failed to update. Pelias commands exited with non-zero exit code. Check log file for workerID ${config.workerId}`
+      `Pelias failed to update. Pelias commands exited with non-zero exit code. Check log file for workerID ${config.workerId} uploaded to ${config.logUploadUrl}`
     )
   }
 
