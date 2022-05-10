@@ -38,6 +38,9 @@ sudo systemctl restart nginx
 sudo /bin/cp pelias.service /lib/systemd/system/
 sudo /bin/cp pelias-webhook.service /lib/systemd/system
 
+# Copy crontab for weekly auto-restart
+sudo /bin/cp reset-pelias.sh /etc/cron.weekly/
+
 # Enable the new services
 sudo systemctl daemon-reload
 sudo systemctl enable pelias
