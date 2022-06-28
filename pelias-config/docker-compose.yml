@@ -39,7 +39,7 @@ services:
             - ${DATA_DIR}:/data
             - ./blacklist/:/data/blacklist
     transit:
-        image: milesgrantibigroup/ibi-transit:v5
+        image: pelias/transit:master
         container_name: pelias_transit
         user: ${DOCKER_USER}
         volumes:
