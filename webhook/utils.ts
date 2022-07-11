@@ -161,6 +161,7 @@ export const uploadAndDeleteLog = async ({
         logPath,
         `${logUploadUrl}/pelias-update-log-${workerId}.txt`
       ])
+      console.log(`Uploaded log to ${logUploadUrl}`)
     } catch {
       console.warn('Failed to upload log, not deleting it.')
       return

@@ -184,7 +184,7 @@ const status: Status = {
   // Set a timeout to avoid hanging
   const hangCheck: AbortController = new AbortController()
   const signal: AbortSignal = hangCheck.signal
-  setPromisedTimeout(50000, null, { signal })
+  setPromisedTimeout(300000, null, { signal })
     .then(async () => await fail('Pelias update is hanging'))
     .catch((err) => {
       if (err.name === 'AbortError') console.log('Pelias did not hang')
@@ -222,7 +222,7 @@ const status: Status = {
   // either report success or failure based on exit code
   if (subprocess.exitCode > 0) {
     await fail(
-      `Pelias failed to update. Pelias commands exited with non-zero exit code. Check log file for workerID ${config.workerId}`
+      `Pelias failed to update. Pelias commands exited with non-zero exit code. Check log file for workerID ${config.workerId} uploaded to ${config.logUploadUrl}`
     )
   }
 
