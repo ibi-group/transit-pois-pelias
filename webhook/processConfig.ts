@@ -93,7 +93,9 @@ const status: Status = {
       { encoding: 'base64' },
       function (err) {
         console.log('File created')
-        console.log(err)
+        if (err) {
+          console.log(err)
+        }
       }
     )
   }
