@@ -1,5 +1,6 @@
 /* eslint-disable complexity */
 import { setTimeout as setPromisedTimeout } from 'timers/promises'
+import { writeFile } from 'fs'
 
 import { createFile as touch, readJSON, remove, writeJSON } from 'fs-promise'
 import execa, { ExecaChildProcess, ExecaSyncReturnValue } from 'execa'
@@ -83,6 +84,21 @@ const status: Status = {
       transit: { feeds: PeliasFeed[] }
     }
   } = require(`../${PELIAS_CONFIG_FILE}`)
+
+  if (config.peliasSynonymsBase64) {
+    await updateStatus({ message: 'Importing synonyms', percentComplete: 10.0 })
+    writeFile(
+      '../pelias-config/synonyms/custom_name.txt',
+      config.peliasSynonymsBase64.replace('data:text/plain;base64,', ''),
+      { encoding: 'base64' },
+      function (err) {
+        console.log('File created')
+        if (err) {
+          console.log(err)
+        }
+      }
+    )
+  }
 
   await updateStatus({
     message: 'Downloading GTFS feeds',
