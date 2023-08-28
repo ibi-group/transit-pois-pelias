@@ -116,14 +116,7 @@ const status: Status = {
     await fail('No new Pelias feeds were provided for import')
   }
   // Merge into existing pelias config
-  peliasConfig.imports.transit.feeds = [
-    // Include all existing feeds that don't have the ID of the new feed
-    ...peliasConfig.imports.transit.feeds.filter(
-      (feed: PeliasFeed) =>
-        !newPeliasFeeds.map((f) => f.agencyId).includes(feed.agencyId)
-    ),
-    ...newPeliasFeeds
-  ]
+  peliasConfig.imports.transit.feeds = [...newPeliasFeeds]
 
   await updateStatus({
     message: 'Importing CSV',
